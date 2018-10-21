@@ -62,6 +62,7 @@ int main(int argc, char* argv[]){
 	free(colName);
 	free(inputDirectory);
 	free(outputDirectory);
+	printf("hello world!");
 	return 0;
 	/*
 	//checking for "-c <column name>" format"
