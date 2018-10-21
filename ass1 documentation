@@ -1,0 +1,4 @@
+so far, ass1.c iterates through the argv vector using a pointer and searches for the -c, -d and -o flags 
+  and their corresponding input arguments. The input arguments are copied into 3 strings and printed out
+  so you can see what they are.The flags will be later used to determine how the scanning process 
+  will occur while the input arguments will determine where the scanning process will occur 
