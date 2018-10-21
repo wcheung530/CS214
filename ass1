@@ -1,0 +1,79 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+
+int main(int argc, char* argv[]){
+	
+	int colFlag;
+	int inDirFlag;
+	int outDirFlag;
+	char* colName;
+	char* inputDirectory;
+	char* outputDirectory;
+
+	//iterate argv to check for flags
+	for (char **a = argv ; a != argv+argc ; a++) {
+	    for(char *p = *a ; *p != '\0' ; p++) {
+
+	        // code uses *p instead of argv[i][j]
+	        if(strcmp(p,"-c")==0){
+	        	colFlag = 1;
+	    	}
+
+	    	else if(strcmp(p,"-d")==0){
+	        	inDirFlag = 1;
+	    	}
+
+	    	else if(strcmp(p,"-o")==0){
+	        	inDirFlag = 1;
+	    	}
+
+	    	// END of checking flags, start of checking arguments
+
+	    	if(colFlag == 1){
+	    		strcpy(colName, p);
+	    	}
+
+	    	else if(inDirFlag == 1){
+	    		strcpy(inputDirectory, p);
+	    	}
+
+	    	else if(outDirFlag == 1){
+	    		strcpy(outputDirectory, p);
+	    	}
+		}
+
+	}
+	//checking for "-c <column name>" format"
+
+	if(argc<3){
+		printf("error, not enough arguments, your format is incorrect\n");
+		return 0;
+	}
+
+	if(strcmp(argv[1],"-c")!=0){
+		colFlag = 0;
+		printf("error, your second argument is not -c\n");
+		return 0;
+	}
+
+	if( (strcmp(argv[2],"director_name")!=0)&&(strcmp(argv[2],"num_critic_for_reviews")!=0)&&(strcmp(argv[2],"duration")!=0)&&(strcmp(argv[2],"director_facebook_likes")!=0)&&(strcmp(argv[2],"actor_3_facebook_likes")!=0)&&(strcmp(argv[2],"actor_2_name")!=0)&&(strcmp(argv[2],"actor_1_facebook_likes")!=0)&&(strcmp(argv[2],"gross")!=0)&&(strcmp(argv[2],"genres")!=0)&&(strcmp(argv[2],"actor_1_name")!=0)&&(strcmp(argv[2],"movie_title")!=0)&&(strcmp(argv[2],"num_voted_users")!=0)&&(strcmp(argv[2],"cast_total_facebook_likes")!=0)&&(strcmp(argv[2],"actor_3_name")!=0)&&(strcmp(argv[2],"facenumber_in_poster")!=0)&&(strcmp(argv[2],"plot_keywords")!=0)&&(strcmp(argv[2],"movie_imdb_link")!=0)&&(strcmp(argv[2],"num_user_for_reviews")!=0)&&(strcmp(argv[2],"language")!=0)&&(strcmp(argv[2],"country")!=0)&&(strcmp(argv[2],"content_rating")!=0)&&(strcmp(argv[2],"budget")!=0)&&(strcmp(argv[2],"title_year")!=0)&&(strcmp(argv[2],"actor_2_facebook_likes")!=0)&&(strcmp(argv[2],"imdb_score")!=0)&&(strcmp(argv[2],"aspect_ratio")!=0)&&(strcmp(argv[2],"movie_facebook_likes")!=0) ){
+		printf("error, input valid column name\n");
+		return 0;
+	}
+
+	//checking for "-d <input directory>" format
+
+	if(strcmp(argv[3],"-d")!=0){
+		inDirFlag = 0;
+		printf("input directory not specified; searching current directory\n");
+		
+	}
+
+	if(strcmp(argv[5], "-o" != 0)){
+		outDirFlag = 0;
+		printf("output directory not specified; sending results to source code directory\n");
+	}
+	else if()
+}
