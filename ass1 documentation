@@ -1,4 +1,9 @@
+10/20/18
 so far, ass1.c iterates through the argv vector using a pointer and searches for the -c, -d and -o flags 
-  and their corresponding input arguments. The input arguments are copied into 3 strings and printed out
-  so you can see what they are.The flags will be later used to determine how the scanning process 
-  will occur while the input arguments will determine where the scanning process will occur 
+and their corresponding input arguments. The input arguments are copied into 3 strings and printed out
+so you can see what they are.The flags will be later used to determine how the scanning process 
+will occur while the input arguments will determine where the scanning process will occur 
+
+10/21/18
+simpleCSVsorter.h has been included as a header file to ass1.c. The function simpleCSVsorter takes 2 arguments: 1) input file, 2)
+input column. This function returns 0 on success and createsa file in the format "<inputfile>-sorted-<inputColumn>.csv" where it will output the sorted results. Once ass1.c starts searching through directories, it can call this function to sort all .csv files in the current directory. 
