@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <dirent.h>
 
 int main(int argc, char* argv[]){
 	
@@ -15,6 +16,16 @@ int main(int argc, char* argv[]){
 	int copied1 = 0;
 	int copied2 = 0;
 	int copied3 =0;
+	DIR *dir;
+
+	//This Opens current directory; (const char *filename)
+	dir = opendir (".");  
+
+	//Checking if Directory is valid
+	if(dir == NULL){
+		printf("Error, Unable to open directory.  May be invalid. \n");
+		exit(1);
+	}
 
 
 	//iterate argv to check for flags and arguments
@@ -55,6 +66,9 @@ int main(int argc, char* argv[]){
 			copied3 = 1;
 			continue;
 	    	}
+
+	//close Directory
+	closedir(dir);
 		
 	}
 	printf("colFlag: %d, inDirFlag: %d, outDirFlag: %d\n", colFlag, inDirFlag, outDirFlag);
