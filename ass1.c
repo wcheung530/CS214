@@ -2,7 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <unistd.h>
 #include "scannerCSVsorter.h"
+
 
 int main(int argc, char* argv[]){
 	
@@ -24,17 +26,61 @@ int main(int argc, char* argv[]){
 	   
 	        if((strcmp(*a,"-c")==0) && (colFlag == 0)){
 	        	colFlag = 1;
-			continue;
+
+	        	if((a+1) < (argv+argc)){
+	        		if( (strcmp( *(a+1), "-d") == 0) || (strcmp( *(a+1), "-o") == 0)){
+	        		//printf("error: flag raised but no column name provided\n");
+	        		write(STDERROR, "error: flag raised but no column name provided\n", 50);
+	        		return 0;
+	        		}
+	        	}
+	        	else if ( (a+1) == (argv+argc)){
+		        	//printf("error: flag raised but no column name provided\n");
+		        	write(STDERROR, "error: flag raised but no column name provided\n", 50);
+		        	return 0;
+		        }
+	        	
+				continue;
 	    	}
 
 	    	else if((strcmp(*a,"-d")==0) && (inDirFlag == 0)){
 	        	inDirFlag = 1;
-			continue;
+
+	        	if((a+1) < (argv+argc)){
+		        	if( (strcmp( *(a+1), "-c") == 0) || (strcmp( *(a+1), "-o") == 0)){
+		        		//printf("error: flag raised but no input directory name provided\n");
+		        		write(STDERROR, "error: flag raised but no input directory name provided\n", 57);
+		        		
+		        		return 0;
+		        	}
+		        }
+		        else if ( (a+1) == (argv+argc)){
+		        	//printf("error: flag raised but no input directory name provided\n");
+		        	write(STDERROR, "error: flag raised but no input directory name provided\n", 57);
+		        	
+		        	return 0;
+		        }
+
+				continue;
 	    	}
 
 	    	else if((strcmp(*a,"-o")==0) && (outDirFlag == 0)){
 	        	outDirFlag = 1;
-			continue;
+
+	        	if((a+1) < (argv+argc)){
+		        	if( (strcmp( *(a+1), "-c") == 0) || (strcmp( *(a+1), "-d") == 0)){
+		        		//printf("error: flag raised but no output directory name provided\n");
+		        		write(STDERROR, "error: flag raised but no output directory name provided\n" , 58);
+		        		return 0;
+		        	}
+		        }
+		        else if ( (a+1) == (argv+argc)){
+		        	//printf("error: no output directory name provided\n");
+		        	write(STDERROR, "error: flag raised but no output directory name provided\n" , 58);
+		        	return 0;
+		        }
+
+				continue;
 	    	}
 
 	    	// END of checking flags, start of checking arguments
@@ -58,6 +104,28 @@ int main(int argc, char* argv[]){
 	    	}
 		
 	}
+
+	if( (strcmp(colName,"director_name")!=0)&&(strcmp(colName,"num_critic_for_reviews")!=0)&&(strcmp(colName,"duration")!=0)&&(strcmp(colName,"director_facebook_likes")!=0)&&(strcmp(colName,"actor_3_facebook_likes")!=0)&&(strcmp(colName,"actor_2_name")!=0)&&(strcmp(colName,"actor_1_facebook_likes")!=0)&&(strcmp(colName,"gross")!=0)&&(strcmp(colName,"genres")!=0)&&(strcmp(colName,"actor_1_name")!=0)&&(strcmp(colName,"movie_title")!=0)&&(strcmp(colName,"num_voted_users")!=0)&&(strcmp(colName,"cast_total_facebook_likes")!=0)&&(strcmp(colName,"actor_3_name")!=0)&&(strcmp(colName,"facenumber_in_poster")!=0)&&(strcmp(colName,"plot_keywords")!=0)&&(strcmp(colName,"movie_imdb_link")!=0)&&(strcmp(colName,"num_user_for_reviews")!=0)&&(strcmp(colName,"language")!=0)&&(strcmp(colName,"country")!=0)&&(strcmp(colName,"content_rating")!=0)&&(strcmp(colName,"budget")!=0)&&(strcmp(colName,"title_year")!=0)&&(strcmp(colName,"actor_2_facebook_likes")!=0)&&(strcmp(colName,"imdb_score")!=0)&&(strcmp(colName,"aspect_ratio")!=0)&&(strcmp(colName,"movie_facebook_likes")!=0) ){
+
+
+		//printf("error, column name is not a valid column name\n");
+		char* hi = "error, column name is not a valid column name\n";
+		write(STDERROR, hi, 46);
+
+		return 0;
+	}
+
+
+
+
+	if (colFlag == 0){
+		char* colFlagerror = "Error: -c argument was not included\n";
+		//printf("%s\n", colFlagerror);
+		write(STDERROR, colFlagerror, 37);
+		return 0;
+	}  
+
+	
 	printf("colFlag: %d, inDirFlag: %d, outDirFlag: %d\n", colFlag, inDirFlag, outDirFlag);
 	printf("Input column: %s, Input directory: %s, Output directory: %s\n", colName, inputDirectory, outputDirectory);
 	free(colName);
