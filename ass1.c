@@ -3,6 +3,7 @@
 #include <string.h>
 #include <errno.h>
 #include "scannerCSVsorter.h"
+#include <dirent.h>
 
 int main(int argc, char* argv[]){
 	
@@ -17,6 +18,16 @@ int main(int argc, char* argv[]){
 	int copied2 = 0;
 	int copied3 =0;
 
+	DIR *dir;
+
+	//This Opens current directory; (const char *filename)
+	dir = opendir (".");  
+
+	//Checking if Directory is valid
+	if(dir == NULL){
+		printf("Error, Unable to open directory.  May be invalid. \n");
+		exit(1);
+	}
 
 	//iterate argv to check for flags and arguments
 
@@ -63,6 +74,9 @@ int main(int argc, char* argv[]){
 	free(colName);
 	free(inputDirectory);
 	free(outputDirectory);
+	
+	//close Directory
+	closedir(dir);
 	
 	return 0;
 	/*
