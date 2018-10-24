@@ -183,7 +183,7 @@ char* formatOutput(char* inputfile, char* inputColumn, char* outputDir){
 	return outputfile;
 }
 
-int simpleCSVsorter(char* inputfile, char* inputColumn, char* outputDir){
+int csvfilehandler(char* inputfile, char* inputColumn, char* outputDir){
 	
 
 	//must be a valid columnName from the movie_metadata
