@@ -29,6 +29,10 @@ int main(int argc, char* argv[]){
 		exit(1);
 	}
 
+	while( sd=readdir(dir) != NULL){
+		printf("%s\n", sd -> dir_name);
+	}
+
 	//iterate argv to check for flags and arguments
 
 	for (a = argv ; a < argv+argc ; a++) {
@@ -77,7 +81,7 @@ int main(int argc, char* argv[]){
 	
 	//close Directory
 	closedir(dir);
-	
+
 	return 0;
 	/*
 	//checking for "-c <column name>" format"
