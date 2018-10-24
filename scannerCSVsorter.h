@@ -1,11 +1,27 @@
-#include <stdio.h>
-#include <stdlib.h>
+/*****
+*
+*	Define structures and function prototypes for your sorter
+*
+*
+*
+******/
 
-#include <string.h>
+//Suggestion: define a struct that mirrors a record (row) of the data set
 
-#include "simpleCSVsorter.h"
 
-//merge sort for strings
+//Suggestion: prototype a mergesort function
+
+
+
+//I would like to use an array of this struct in order to sort using mergeSort
+struct Node{
+	//the data being compared must either be integer or string
+	int intData;
+	char* stringData;
+
+	//this is the full string so we can just print it out line by line and output the file
+	char* fullString;	
+};
 void mergeStr(struct Node *arr,int start,int middle,int end, struct Node *temp1, struct Node *temp2){
         int arraySize1 = middle-start+1;
         int arraySize2 = end-middle;
@@ -124,20 +140,51 @@ void mergesortInt(struct Node *arr, int start, int end,struct Node *temp1, struc
         }
 }
 
+char* formatOutput(char* inputfile, char* inputColumn, char* outputDir){
+	///////formatting output to "<inputfile>-sorted-<inputColumn>.csv"
 
-int simpleCSVsorter(char* inputfile, char* inputColumn){
+	char* outputfile = (char*)malloc(1000*sizeof(char));
+	char* cat0 = (char*)malloc(100*sizeof(char));
+	char* cat1 = (char*)malloc(100*sizeof(char));
+	char* cat2 = (char*)malloc(100*sizeof(char));
+	char* cat3 = (char*)malloc(100*sizeof(char));
+	char* cat4 = (char*)malloc(100*sizeof(char));
+	char* cat5 = (char*)malloc(100*sizeof(char));
+	char* cat6 = (char*)malloc(100*sizeof(char));
+
+	//making copies of inputfile and inputcolumn
+	char* tempinputfile = (char*)malloc(100*sizeof(char));
+	char* tempinputColumn = (char*)malloc(100*sizeof(char));
+	char* tempoutputDir = (char*)malloc(100*sizeof(char));
+	strcpy(tempinputfile, inputfile);
+	strcpy(tempinputColumn, inputColumn);
+	strcpy(tempoutputDir, outputDir);
 	
-	//must be of the format ./simpleCSVsorter -c columnName
+	//concatenating all the strings together
+	//strcpy(cat0, "");
+	strcpy(cat1, tempoutputDir);
+	//cat1 = strcat(cat0, tempoutputDir);
+	cat2 = strcat(cat1, "/");
+	
+			//trimming ".csv" off the tempinputfile name
+			char *ptr;
+			ptr = strstr(tempinputfile, ".csv");
+			if (ptr != NULL) {
+		    	*ptr = '\0';
+			}
 
-	if(argc<3){
-		printf("error, not enough arguments, your format is incorrect\n");
-		return 0;
-	}
+	cat3 = strcat(cat2, tempinputfile);
+	cat4 = strcat(cat3, "-sorted-");
+	cat5 = strcat(cat4, tempinputColumn);
+	cat6 = strcat(cat5, ".csv");
+	strcpy(outputfile, cat6);
 
-	if(strcmp(argv[1],"-c")!=0){
-		printf("error, your second argument is not -c\n");
-		return 0;
-	}
+	printf("%s\n", outputfile);
+	return outputfile;
+}
+
+int csvfilehandler(char* inputfile, char* inputColumn, char* outputDir){
+	
 
 	//must be a valid columnName from the movie_metadata
 
@@ -155,7 +202,7 @@ int simpleCSVsorter(char* inputfile, char* inputColumn){
 
 	FILE *myFile;
 	
-	myFile = fdopen(0, "r");
+	myFile = fopen(inputfile, "r");
 
         if(myFile == NULL){
                 printf("Failed to open and read the file.\n");
@@ -350,19 +397,30 @@ int simpleCSVsorter(char* inputfile, char* inputColumn){
 		mergesortStr(myArray,1,lineCount-1,temp1,temp2);
 	}
 
-	printf("%s\n",myArray[0].fullString);
+	
+	//creating sorted file in given output directory
+	
+	FILE* output = fopen(formatOutput(inputfile, inputColumn, outputDir), "w");
+	
+	fprintf(output,"%s\n",myArray[0].fullString);
 
 	int z;
 	for(z=1;z<lineCount;z++){
 		//printf("%i\n",myArray[z].intData);
 		//printf("%s\n",myArray[z].stringData);
-		printf("%s\n",myArray[z].fullString);
+		fprintf(output,"%s\n",myArray[z].fullString);
 	}
 
+	
 	free(temp1);
 	free(temp2);
-	close(myFile);
 
+	
+	pclose(output);
+	pclose(myFile);
+	
+	
 
 	return 0;
 }
+
