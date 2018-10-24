@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include "scannerCSVsorter.h"
+#include <dirent.h>
 
 
 int main(int argc, char* argv[]){
@@ -19,6 +20,21 @@ int main(int argc, char* argv[]){
 	int copied2 = 0;
 	int copied3 =0;
 
+	DIR *dir;
+	struct dirent *sd;
+
+	//This Opens current directory; (const char *filename)
+	dir = opendir (".");  
+
+	//Checking if Directory is valid
+	if(dir == NULL){
+		printf("Error, Unable to open directory.  May be invalid. \n");
+		exit(1);
+	}
+	//This will print out all the directories including parents
+	while( (sd=readdir(dir)) != NULL){
+		printf(">>%s\n", sd -> d_name);
+	}
 
 	//iterate argv to check for flags and arguments
 
@@ -132,6 +148,9 @@ int main(int argc, char* argv[]){
 	free(inputDirectory);
 	free(outputDirectory);
 	
+	//close Directory
+	closedir(dir);
+
 	return 0;
 	/*
 	//checking for "-c <column name>" format"
