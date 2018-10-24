@@ -19,6 +19,7 @@ int main(int argc, char* argv[]){
 	int copied3 =0;
 
 	DIR *dir;
+	struct dirent *sd;
 
 	//This Opens current directory; (const char *filename)
 	dir = opendir (".");  
@@ -28,9 +29,9 @@ int main(int argc, char* argv[]){
 		printf("Error, Unable to open directory.  May be invalid. \n");
 		exit(1);
 	}
-
-	while( sd=readdir(dir) != NULL){
-		printf("%s\n", sd -> dir_name);
+	//This will print out all the directories including parents
+	while( (sd=readdir(dir)) != NULL){
+		printf(">>%s\n", sd -> d_name);
 	}
 
 	//iterate argv to check for flags and arguments
