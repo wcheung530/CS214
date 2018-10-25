@@ -24,7 +24,7 @@ int main(int argc, char* argv[]){
 	struct dirent *sd;
 
 	//This Opens current directory; (const char *filename)
-	dir = opendir (".");  
+	dir = opendir (inputDirectory);  
 
 	//Checking if Directory is valid
 	if(dir == NULL){
@@ -120,6 +120,7 @@ int main(int argc, char* argv[]){
 	    	}
 		
 	}
+
 
 	if( (strcmp(colName,"director_name")!=0)&&(strcmp(colName,"num_critic_for_reviews")!=0)&&(strcmp(colName,"duration")!=0)&&(strcmp(colName,"director_facebook_likes")!=0)&&(strcmp(colName,"actor_3_facebook_likes")!=0)&&(strcmp(colName,"actor_2_name")!=0)&&(strcmp(colName,"actor_1_facebook_likes")!=0)&&(strcmp(colName,"gross")!=0)&&(strcmp(colName,"genres")!=0)&&(strcmp(colName,"actor_1_name")!=0)&&(strcmp(colName,"movie_title")!=0)&&(strcmp(colName,"num_voted_users")!=0)&&(strcmp(colName,"cast_total_facebook_likes")!=0)&&(strcmp(colName,"actor_3_name")!=0)&&(strcmp(colName,"facenumber_in_poster")!=0)&&(strcmp(colName,"plot_keywords")!=0)&&(strcmp(colName,"movie_imdb_link")!=0)&&(strcmp(colName,"num_user_for_reviews")!=0)&&(strcmp(colName,"language")!=0)&&(strcmp(colName,"country")!=0)&&(strcmp(colName,"content_rating")!=0)&&(strcmp(colName,"budget")!=0)&&(strcmp(colName,"title_year")!=0)&&(strcmp(colName,"actor_2_facebook_likes")!=0)&&(strcmp(colName,"imdb_score")!=0)&&(strcmp(colName,"aspect_ratio")!=0)&&(strcmp(colName,"movie_facebook_likes")!=0) ){
 
