@@ -23,13 +23,13 @@ int main(int argc, char* argv[]){
 	DIR *dir;
 	struct dirent *sd;
 
-	//This Opens current directory; (const char *filename)
+	//This Opens input directory; (const char *filename)
 	dir = opendir (inputDirectory);  
 
 	//Checking if Directory is valid
 	if(dir == NULL){
-		printf("Error, Unable to open directory.  May be invalid. \n");
-		exit(1);
+		printf("Directory may be invalid or missing.  Will continue to search current directory. \n");
+		dir = opendir(".");
 	}
 	//This will print out all the directories including parents
 	while( (sd=readdir(dir)) != NULL){
