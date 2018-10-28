@@ -3,6 +3,8 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <dirent.h>
 #include "scannerCSVsorter.h"
 
 
@@ -131,7 +133,11 @@ int main(int argc, char* argv[]){
 	printf("colFlag: %d, inDirFlag: %d, outDirFlag: %d\n", colFlag, inDirFlag, outDirFlag);
 	printf("Input column: %s, Input directory: %s, Output directory: %s\n", colName, inputDirectory, outputDirectory);
 
-	int test = csvfilehandler("movie_metadata.csv", colName, outputDirectory);
+
+	listDirectory(inputDirectory, colName, outputDirectory, 0);
+	//return 0;
+	
+	/*int test = csvfilehandler("movie_metadata.csv", colName, outputDirectory);
 
 	if(test == 0){
 		printf("csvfile was successfully sorted\n");
@@ -141,7 +147,7 @@ int main(int argc, char* argv[]){
 	}
 	else if(test == -2){
 		return 0;
-	}
+	}*/
 
 	free(colName);
 	free(inputDirectory);

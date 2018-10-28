@@ -1,8 +1,5 @@
 #define STDERROR 2
 
-
-
-//I would like to use an array of this struct in order to sort using mergeSort
 struct Node{
 	//the data being compared must either be integer or string
 	int intData;
@@ -168,102 +165,129 @@ char* formatOutput(char* inputfile, char* inputColumn, char* outputDir){
 	cat6 = strcat(cat5, ".csv");
 	strcpy(outputfile, cat6);
 
-	printf("%s\n", outputfile);
+	//printf("%s\n", outputfile);
 	return outputfile;
 }
 
 //this function returns 0 if a file is a valid csv file and returns -1 if invalid file
-int checkcsv(char* inputfile){
+int checkcsv(char* inputfilepath){
 
-	if(strstr(inputfile, ".csv") == NULL){
+	if(strstr(inputfilepath, ".csv") == NULL){
 		fprintf(stderr,"Not a csv file, ignore and skip this one\n");
 		return -1;
 	}
+
+	else if(strstr(inputfilepath, ".csv") != NULL) {
 	//read the file for the first time to check for valid columns
 
-	FILE* myFile0 = fopen(inputfile, "r");
-
-	int lineNum = 0; ////used to check each line of a file
-	char *line = NULL;
-	size_t line_size;
-	int i= 0; //for loop increment int
-	int j = 0;
-	int res1 = 0; //counts number of occurrences of a character in first line
-	int res2 = 0; //counts number of occurrences of a character in all the following lines
-	char* tmp;
-	char* tmp2;
-	int ignoreComma = 0; //int for counting number of ' " ' in a line. this is for the case that theres a comma in a field
-
-	while( getline(&line, &line_size, myFile0 ) != -1 ){		
-		if(lineNum == 0){
+		//case for if you come across a an already sorted <inputfilepath>-sorted-<inputColumn>.csv file
+		if((strstr(inputfilepath, "-sorted-") != NULL) && ((strstr(inputfilepath,"color")!=NULL)||(strstr(inputfilepath,"director_name")!=NULL)||(strstr(inputfilepath,"num_critic_for_reviews")!=NULL)||(strstr(inputfilepath,"duration")!=NULL)||(strstr(inputfilepath,"director_facebook_likes")!=NULL)||(strstr(inputfilepath,"actor_3_facebook_likes")!=NULL)||(strstr(inputfilepath,"actor_2_name")!=NULL)||(strstr(inputfilepath,"actor_1_facebook_likes")!=NULL)||(strstr(inputfilepath,"gross")!=NULL)||(strstr(inputfilepath,"genres")!=NULL)||(strstr(inputfilepath,"actor_1_name")!=NULL)||(strstr(inputfilepath,"movie_title")!=NULL)||(strstr(inputfilepath,"num_voted_users")!=NULL)||(strstr(inputfilepath,"cast_total_facebook_likes")!=NULL)||(strstr(inputfilepath,"actor_3_name")!=NULL)||(strstr(inputfilepath,"facenumber_in_poster")!=NULL)||(strstr(inputfilepath,"plot_keywords")!=NULL)||(strstr(inputfilepath,"movie_imdb_link")!=NULL)||(strstr(inputfilepath,"num_user_for_reviews")!=NULL)||(strstr(inputfilepath,"language")!=NULL)||(strstr(inputfilepath,"country")!=NULL)||(strstr(inputfilepath,"content_rating")!=NULL)||(strstr(inputfilepath,"budget")!=NULL)||(strstr(inputfilepath,"title_year")!=NULL)||(strstr(inputfilepath,"actor_2_facebook_likes")!=NULL)||(strstr(inputfilepath,"imdb_score")!=NULL)||(strstr(inputfilepath,"aspect_ratio")!=NULL)||(strstr(inputfilepath,"movie_facebook_likes")!=NULL))){
 			
-			tmp = line; //temp ptr to line buffer of the very first line
-			//printf("%s\n", tmp);
+			fprintf(stderr, "Error: This file has already been sorted before\n");
+			return -1;
 
-			//checks if the csv file has all the required columns. Otherwise report bad csv file
-			if( (strstr(tmp,"color")==NULL)||(strstr(tmp,"director_name")==NULL)||(strstr(tmp,"num_critic_for_reviews")==NULL)||(strstr(tmp,"duration")==NULL)||(strstr(tmp,"director_facebook_likes")==NULL)||(strstr(tmp,"actor_3_facebook_likes")==NULL)||(strstr(tmp,"actor_2_name")==NULL)||(strstr(tmp,"actor_1_facebook_likes")==NULL)||(strstr(tmp,"gross")==NULL)||(strstr(tmp,"genres")==NULL)||(strstr(tmp,"actor_1_name")==NULL)||(strstr(tmp,"movie_title")==NULL)||(strstr(tmp,"num_voted_users")==NULL)||(strstr(tmp,"cast_total_facebook_likes")==NULL)||(strstr(tmp,"actor_3_name")==NULL)||(strstr(tmp,"facenumber_in_poster")==NULL)||(strstr(tmp,"plot_keywords")==NULL)||(strstr(tmp,"movie_imdb_link")==NULL)||(strstr(tmp,"num_user_for_reviews")==NULL)||(strstr(tmp,"language")==NULL)||(strstr(tmp,"country")==NULL)||(strstr(tmp,"content_rating")==NULL)||(strstr(tmp,"budget")==NULL)||(strstr(tmp,"title_year")==NULL)||(strstr(tmp,"actor_2_facebook_likes")==NULL)||(strstr(tmp,"imdb_score")==NULL)||(strstr(tmp,"aspect_ratio")==NULL)||(strstr(tmp,"movie_facebook_likes")==NULL) ){
-				fprintf(stderr,"error, bad csv file, this file does not have all the required columns\n");
-				return -1;
-			}
-			for(i = 0; i<strlen(tmp); i++){
-
-				if (tmp[i] == ',') {
-        		res1++;         
-        		}
-			}
-			//printf("comma count for the first line : %d\n", res1);
-
-  		
-  			lineNum++;
 		}
 
-		else if(lineNum > 0){
-			tmp2 = line; //temp ptr to line buffer of the 2nd line
-			//fprintf(stderr,"%s\n", tmp2);
-			for(j = 0; j<strlen(tmp2); j++){
 
-				if(tmp2[j] == '"'){
-					ignoreComma++;
+		///NEED FULL PATH NAME TO OPEN FILE//////////////////////////////////////////////
+		FILE* myFile0 = fopen(inputfilepath, "r");
+		if (myFile0 == NULL){
+			fprintf(stderr,"ERROR: in checkcsv, myFile0 was NULL");
+		}
+		int lineNum = 0; ////used to check each line of a file
+		char *line = (char*)malloc(100*sizeof(char));
+		size_t line_size = 0;
+		int i= 0; //for loop increment int
+		int j = 0;
+		int res1 = 0; //counts number of occurrences of a character in first line
+		int res2 = 0; //counts number of occurrences of a character in all the following lines
+		char* tmp;
+		char* tmp2;
+		int ignoreComma = 0; //int for counting number of ' " ' in a line. this is for the case that theres a comma in a field
+		//printf("calling the getline function in checkcsv...\n");
+		//getline(&line, &line_size, myFile0 ); 
+
+		while( getline(&line, &line_size, myFile0 ) != -1 ){	
+			//printf("getline function passed!");	
+			if(lineNum == 0){
+				
+				tmp = line; //temp ptr to line buffer of the very first line
+				//printf("%s\n", tmp);
+
+				//checks if the csv file has all the required columns. Otherwise report bad csv file
+				if( (strstr(tmp,"color")==NULL)||(strstr(tmp,"director_name")==NULL)||(strstr(tmp,"num_critic_for_reviews")==NULL)||(strstr(tmp,"duration")==NULL)||(strstr(tmp,"director_facebook_likes")==NULL)||(strstr(tmp,"actor_3_facebook_likes")==NULL)||(strstr(tmp,"actor_2_name")==NULL)||(strstr(tmp,"actor_1_facebook_likes")==NULL)||(strstr(tmp,"gross")==NULL)||(strstr(tmp,"genres")==NULL)||(strstr(tmp,"actor_1_name")==NULL)||(strstr(tmp,"movie_title")==NULL)||(strstr(tmp,"num_voted_users")==NULL)||(strstr(tmp,"cast_total_facebook_likes")==NULL)||(strstr(tmp,"actor_3_name")==NULL)||(strstr(tmp,"facenumber_in_poster")==NULL)||(strstr(tmp,"plot_keywords")==NULL)||(strstr(tmp,"movie_imdb_link")==NULL)||(strstr(tmp,"num_user_for_reviews")==NULL)||(strstr(tmp,"language")==NULL)||(strstr(tmp,"country")==NULL)||(strstr(tmp,"content_rating")==NULL)||(strstr(tmp,"budget")==NULL)||(strstr(tmp,"title_year")==NULL)||(strstr(tmp,"actor_2_facebook_likes")==NULL)||(strstr(tmp,"imdb_score")==NULL)||(strstr(tmp,"aspect_ratio")==NULL)||(strstr(tmp,"movie_facebook_likes")==NULL) ){
+					fprintf(stderr,"error, bad csv file, this file does not have all the required columns\n");
+					return -1;
 				}
+				for(i = 0; i<strlen(tmp); i++){
 
-				if ((tmp2[j] == ',') && (ignoreComma % 2 == 0)) {
-        		res2++;          	
-        		}
+					if (tmp[i] == ',') {
+	        		res1++;         
+	        		}
+				}
+				//printf("comma count for the first line : %d\n", res1);
 
+	  		
+	  			lineNum++;
 			}
-			lineNum++;
 
-			//printf("comma count for line %d: %d\n", lineNum, res2);
-  		
-  			if(res1 == res2){
-  				//printf("same number of commas LETS GET THIS FUKIN BREAD\n");
-  				
-  				res2 = 0;
-  				tmp2 = NULL; 	//reset values of tmp2 and res2
+			else if(lineNum > 0){
+				tmp2 = line; //temp ptr to line buffer of the 2nd line
+				//fprintf(stderr,"%s\n", tmp2);
+				for(j = 0; j<strlen(tmp2); j++){
 
-  				continue;
-  			}
-  			else if ( res1 != res2 ){
-  				fprintf(stderr,"the columns are messed up, don't use this csv file\n");
-  				pclose(myFile0);
-  				return -1;
-  			}  			  			
+					if(tmp2[j] == '"'){
+						ignoreComma++;
+					}
+
+					if ((tmp2[j] == ',') && (ignoreComma % 2 == 0)) {
+	        		res2++;          	
+	        		}
+
+				}
+				lineNum++;
+
+				//printf("comma count for line %d: %d\n", lineNum, res2);
+	  		
+	  			if(res1 == res2){
+	  				//printf("same number of commas LETS GET THIS FUKIN BREAD\n");
+	  				
+	  				res2 = 0;
+	  				tmp2 = NULL; 	//reset values of tmp2 and res2
+
+	  				continue;
+	  			}
+	  			else if ( res1 != res2 ){
+	  				fprintf(stderr,"the columns are messed up, don't use this csv file\n");
+	  				//printf("res1 : %d, res2 : %d", res1, res2);
+	  				pclose(myFile0);
+	  				return -1;
+	  			}  			  			
+			}
+
+			else {
+				lineNum++;
+			}
 		}
-
-		else {
-			lineNum++;
-		}
+		pclose(myFile0);
+		return 0;
 	}
-	pclose(myFile0);
-	return 0;
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
 
 //handles the sorting of an input file. Returns 0 on sucess, and -1 for failure
-int csvfilehandler(char* inputfile, char* inputColumn, char* outputDir){
+int csvfilehandler(char* inputfilepath, char* inputfile, char* inputColumn, char* outputDir){
 	
 	//printf("%s\n", inputColumn );
 
-	int checkcsv1 = checkcsv(inputfile);
+	//printf("entering checkcsv function...\n");
+
+	int checkcsv1 = checkcsv(inputfilepath);
 	if(checkcsv1 == -1){
 		fprintf(stderr, "inputfile is not a valid csv file\n");
 		return -1;
@@ -287,7 +311,7 @@ int csvfilehandler(char* inputfile, char* inputColumn, char* outputDir){
 
 	FILE *myFile;
 	
-	myFile = fopen(inputfile, "r");
+	myFile = fopen(inputfilepath, "r");
 
         if(myFile == NULL){
                 fprintf(stderr,"Failed to open and read the file.\n");
@@ -488,7 +512,7 @@ int csvfilehandler(char* inputfile, char* inputColumn, char* outputDir){
 	
 	FILE* output = fopen(formatOutput(inputfile, inputColumn, outputDir), "w");
 	if(output == NULL){
-		printf("Error: output directory does not exist\n ");
+		fprintf(stderr, "Error in line 521: could not open file");
 		return -2;
 	}
 	
@@ -514,3 +538,52 @@ int csvfilehandler(char* inputfile, char* inputColumn, char* outputDir){
 	return 0;
 }
 
+
+
+void listDirectory(char* inputDirectory, char* inputColumn, char* outputDir, int indent){
+
+	DIR *dir;
+	struct dirent *entry;
+
+	if(!(dir = opendir(inputDirectory))){
+		return;
+	}
+	//printf("currently in listDirectory function...\n");
+
+	while ((entry = readdir(dir)) != NULL){
+		if(entry->d_type == DT_DIR) {// found a directory
+			char path[1024];
+			if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0){
+				continue; //this catches the current directory and parent directory
+			}
+
+			snprintf(path, sizeof(path), "%s/%s", inputDirectory, entry->d_name);
+			printf("%*s[%s]\n", indent, "",entry->d_name);
+			listDirectory(path,inputColumn, outputDir, indent + 2);
+		}
+		else{
+			//run csvfilehandler
+			//printf("now calling csvfilehandler function...\n");
+
+			char path2[1024];
+			snprintf(path2, sizeof(path2), "%s/%s", inputDirectory, entry->d_name);
+			int test = csvfilehandler(path2, entry->d_name, inputColumn, outputDir );
+
+			//printf("path2 string :%s\n", path2);
+			//printf("entry->d_name string: %s\n", entry->d_name);
+			if(test == 0){
+				fprintf(stderr,"csvfile was successfully sorted\n");
+			}
+			else if(test == -1){
+				fprintf(stderr, "csvfile was not a valid file and could not be sorted\n");
+			}
+			else if(test == -2){
+				//misleading statement lol :fprintf(stderr, "Error: output directory does not exist\n ");
+			}
+
+			printf("%*s- %s\n", indent, "", entry->d_name);
+		}
+	}
+	closedir(dir);
+	return;
+}
