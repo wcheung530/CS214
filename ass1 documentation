@@ -14,3 +14,16 @@ searching through directories, it can call this function to sort all .csv files 
 scannerCSVsorter.h has been added and is now included in ass1.c. In scannerCSVsorter.h, it has the function
 csvfilehandler() which takes an input file, input column to sort, and output directory path. This function 
 used to be called simpleCSVsorter()  
+
+10/27/18 
+ass1.c can now call csvfilehandler to check if a file is a valid file to sort on. Ass1.c also returns an 
+error if the output directoy does not exist. Currently need to finish writing code to open and read through
+a directory so we can test the input directory argument. 
+
+
+10/28/18
+ass1.c recursively searches through a specified input directory, sorts all valid csv files, and then outputs 
+all the results to a specified output directory. New function in scannerCSVsorter.h include listDirectory().
+While this works for specified input and output directories, still need to work on case where both/one of 
+the '-d' and '-o' flags are not raised.Besides this, the last thing to work on is forking multiple processes
+and printing out the final output 
