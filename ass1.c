@@ -124,7 +124,15 @@ int main(int argc, char* argv[]){
 		return 0;
 	}
 
-
+	//check if input or output directory flags were not raised
+	if(inDirFlag == 0 && strcmp(inputDirectory, "") == 0){
+		//will use current directory as inputDirectory
+		strcpy(inputDirectory, ".");
+	}
+	if(outDirFlag == 0 && strcmp(outputDirectory, "") == 0){
+		//will use current directory as outputDirectory
+		strcpy(outputDirectory, ".");
+	}
 
 
 	
@@ -132,6 +140,8 @@ int main(int argc, char* argv[]){
 	
 	printf("colFlag: %d, inDirFlag: %d, outDirFlag: %d\n", colFlag, inDirFlag, outDirFlag);
 	printf("Input column: %s, Input directory: %s, Output directory: %s\n", colName, inputDirectory, outputDirectory);
+
+	//printf("entering listDirectory function...\n");
 
 
 	listDirectory(inputDirectory, colName, outputDirectory, 0);

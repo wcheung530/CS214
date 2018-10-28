@@ -543,11 +543,27 @@ int csvfilehandler(char* inputfilepath, char* inputfile, char* inputColumn, char
 void listDirectory(char* inputDirectory, char* inputColumn, char* outputDir, int indent){
 
 	DIR *dir;
+	DIR *outdir;
 	struct dirent *entry;
 
+
 	if(!(dir = opendir(inputDirectory))){
+		fprintf(stderr, "Error: could not open input directory or it does not exist");
 		return;
 	}
+
+
+	if(!(outdir = opendir(outputDir))){
+		fprintf(stderr, "Error: could not open output directory or it does not exist\n");
+		return;
+	}
+
+	else {
+		closedir(outdir);
+	}
+
+
+
 	//printf("currently in listDirectory function...\n");
 
 	while ((entry = readdir(dir)) != NULL){
