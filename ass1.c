@@ -4,11 +4,11 @@
 #include <errno.h>
 #include <unistd.h>
 #include "scannerCSVsorter.h"
-#include <dirent.h>
 
 
 int main(int argc, char* argv[]){
 	
+
 	int colFlag = 0;
 	int inDirFlag = 0;
 	int outDirFlag = 0;
@@ -20,21 +20,6 @@ int main(int argc, char* argv[]){
 	int copied2 = 0;
 	int copied3 =0;
 
-	DIR *dir;
-	struct dirent *sd;
-
-	//This Opens input directory; (const char *filename)
-	dir = opendir (inputDirectory);  
-
-	//Checking if Directory is valid
-	if(dir == NULL){
-		printf("Directory may be invalid or missing.  Will continue to search current directory. \n");
-		dir = opendir(".");
-	}
-	//This will print out all the directories including parents
-	while( (sd=readdir(dir)) != NULL){
-		printf(">>%s\n", sd -> d_name);
-	}
 
 	//iterate argv to check for flags and arguments
 
@@ -120,9 +105,14 @@ int main(int argc, char* argv[]){
 	    	}
 		
 	}
+	if (colFlag == 0){
+		char* colFlagerror = "Error: -c argument was not included\n";
+		//printf("%s\n", colFlagerror);
+		write(STDERROR, colFlagerror, 37);
+		return 0;
+	}  
 
-
-	if( (strcmp(colName,"director_name")!=0)&&(strcmp(colName,"num_critic_for_reviews")!=0)&&(strcmp(colName,"duration")!=0)&&(strcmp(colName,"director_facebook_likes")!=0)&&(strcmp(colName,"actor_3_facebook_likes")!=0)&&(strcmp(colName,"actor_2_name")!=0)&&(strcmp(colName,"actor_1_facebook_likes")!=0)&&(strcmp(colName,"gross")!=0)&&(strcmp(colName,"genres")!=0)&&(strcmp(colName,"actor_1_name")!=0)&&(strcmp(colName,"movie_title")!=0)&&(strcmp(colName,"num_voted_users")!=0)&&(strcmp(colName,"cast_total_facebook_likes")!=0)&&(strcmp(colName,"actor_3_name")!=0)&&(strcmp(colName,"facenumber_in_poster")!=0)&&(strcmp(colName,"plot_keywords")!=0)&&(strcmp(colName,"movie_imdb_link")!=0)&&(strcmp(colName,"num_user_for_reviews")!=0)&&(strcmp(colName,"language")!=0)&&(strcmp(colName,"country")!=0)&&(strcmp(colName,"content_rating")!=0)&&(strcmp(colName,"budget")!=0)&&(strcmp(colName,"title_year")!=0)&&(strcmp(colName,"actor_2_facebook_likes")!=0)&&(strcmp(colName,"imdb_score")!=0)&&(strcmp(colName,"aspect_ratio")!=0)&&(strcmp(colName,"movie_facebook_likes")!=0) ){
+	if( (strcmp(colName,"color")!=0)&&(strcmp(colName,"director_name")!=0)&&(strcmp(colName,"num_critic_for_reviews")!=0)&&(strcmp(colName,"duration")!=0)&&(strcmp(colName,"director_facebook_likes")!=0)&&(strcmp(colName,"actor_3_facebook_likes")!=0)&&(strcmp(colName,"actor_2_name")!=0)&&(strcmp(colName,"actor_1_facebook_likes")!=0)&&(strcmp(colName,"gross")!=0)&&(strcmp(colName,"genres")!=0)&&(strcmp(colName,"actor_1_name")!=0)&&(strcmp(colName,"movie_title")!=0)&&(strcmp(colName,"num_voted_users")!=0)&&(strcmp(colName,"cast_total_facebook_likes")!=0)&&(strcmp(colName,"actor_3_name")!=0)&&(strcmp(colName,"facenumber_in_poster")!=0)&&(strcmp(colName,"plot_keywords")!=0)&&(strcmp(colName,"movie_imdb_link")!=0)&&(strcmp(colName,"num_user_for_reviews")!=0)&&(strcmp(colName,"language")!=0)&&(strcmp(colName,"country")!=0)&&(strcmp(colName,"content_rating")!=0)&&(strcmp(colName,"budget")!=0)&&(strcmp(colName,"title_year")!=0)&&(strcmp(colName,"actor_2_facebook_likes")!=0)&&(strcmp(colName,"imdb_score")!=0)&&(strcmp(colName,"aspect_ratio")!=0)&&(strcmp(colName,"movie_facebook_likes")!=0) ){
 
 
 		//printf("error, column name is not a valid column name\n");
@@ -135,23 +125,30 @@ int main(int argc, char* argv[]){
 
 
 
-	if (colFlag == 0){
-		char* colFlagerror = "Error: -c argument was not included\n";
-		//printf("%s\n", colFlagerror);
-		write(STDERROR, colFlagerror, 37);
-		return 0;
-	}  
-
+	
+	//printf("Testing colname: %s\n", colName);
 	
 	printf("colFlag: %d, inDirFlag: %d, outDirFlag: %d\n", colFlag, inDirFlag, outDirFlag);
 	printf("Input column: %s, Input directory: %s, Output directory: %s\n", colName, inputDirectory, outputDirectory);
+
+	int test = csvfilehandler("movie_metadata.csv", colName, outputDirectory);
+
+	if(test == 0){
+		printf("csvfile was successfully sorted\n");
+	}
+	else if(test == -1){
+		printf("csvfile was not a valid file and could not be sorted\n");
+	}
+	else if(test == -2){
+		return 0;
+	}
+
 	free(colName);
 	free(inputDirectory);
 	free(outputDirectory);
 	
-	//close Directory
-	closedir(dir);
-
+	
+	
 	return 0;
 	/*
 	//checking for "-c <column name>" format"
