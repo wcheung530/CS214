@@ -778,15 +778,14 @@ void listDirectory(char* inputDirectory, char* inputColumn, char* outputDir, int
 			
 		
 		}
-		else{
+		else{ //handling a file
 			//run csvfilehandler
 			//printf("now calling csvfilehandler function...\n");
 
-			char path2[1024];
-			snprintf(path2, sizeof(path2), "%s/%s", inputDirectory, entry->d_name);
+			
 			
 
-			if(checkcsv(path2) == 0){//if its a valid csvfile, fork a process to handle it
+			
 				forked_pid = fork();
 					if(forked_pid == 0){//I am the child process for filehandler
 
@@ -797,6 +796,10 @@ void listDirectory(char* inputDirectory, char* inputColumn, char* outputDir, int
 						//printf("REEEEE Im in the child process to handle files\n");
 						//printf("I am the child process to handle files asdfasdf\n");
 
+						
+						char path2[1024];
+						snprintf(path2, sizeof(path2), "%s/%s", inputDirectory, entry->d_name);
+						
 						/*char path2[1024];
 						snprintf(path2, sizeof(path2), "%s/%s", inputDirectory, entry->d_name);*/
 						int test = csvfilehandler(path2, entry->d_name, inputColumn, outputDir );
@@ -822,7 +825,7 @@ void listDirectory(char* inputDirectory, char* inputColumn, char* outputDir, int
 					}*/
 
 					//printf("%*s- %s\n", indent, "", entry->d_name);
-			}
+			
 		}
 	}
 	closedir(dir);
